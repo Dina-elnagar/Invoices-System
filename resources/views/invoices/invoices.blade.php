@@ -27,6 +27,18 @@
 @endsection
 @section('content')
 
+    @if (session()->has('archive_invoice'))
+        <script>
+            window.onload = function() {
+                notif({
+                    msg: "Invoice Archived successfully",
+                    type: "success"
+                })
+            }
+
+        </script>
+    @endif
+
     @if (session()->has('delete_invoice'))
         <script>
             window.onload = function() {
@@ -103,11 +115,24 @@
                                                     <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-info"
                                                             data-toggle="dropdown" id="droprightMenuButton" type="button">Action<i class="fas fa-caret-right ml-1"></i></button>
                                                     <div aria-labelledby="droprightMenuButton" class="dropdown-menu tx-13">
-                                                        <a class="dropdown-item" href="{{url('edit_invoice')}}/{{$invoice->id}}">Edit Invoice</a>
+                                                        <a class="dropdown-item" href="{{url('edit_invoice')}}/{{$invoice->id}}">
+                                                            <i class="fas fa-edit"></i>  Edit</a>
 
                                                         <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
                                                            data-toggle="modal" data-target="#delete_invoice">
-                                                            <i class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;Delete Invoice</a>
+                                                            <i class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;Delete</a>
+
+                                                        <a class="dropdown-item" href="{{url('Status_show')}}/{{$invoice->id}}">
+                                                            <i class="fas fa-money-bill"></i>  Status Show</a>
+
+                                                        <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+                                                           data-toggle="modal" data-target="#Transfer_invoice"><i
+                                                                class="text-warning fas fa-exchange-alt"></i>&nbsp;&nbsp; Archive</a>
+
+                                                        <a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
+                                                                class="text-success fas fa-print"></i>&nbsp;&nbsp;  Print
+                                                        </a>
+
                                                     </div>
                                                 </div>
                                     </td>
@@ -146,6 +171,37 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <!-- Archive Invoice -->
+                    <div class="modal fade" id="Transfer_invoice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Archive Invoice</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <form action="{{ route('invoices.destroy', 'test') }}" method="post">
+                                    {{ method_field('delete') }}
+                                    {{ csrf_field() }}
+                                </div>
+                                <div class="modal-body">
+                                   Are you sure you want to archive this invoice
+                                    <input type="hidden" name="invoice_id" id="invoice_id" value="">
+                                    <input type="hidden" name="id_page" id="id_page" value="2">
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-success">Archive</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
 
 				</div>
 				<!-- row closed -->
@@ -188,4 +244,13 @@
 
     </script>
 
+    <script>
+        $('#Transfer_invoice').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            var invoice_id = button.data('invoice_id')
+            var modal = $(this)
+            modal.find('.modal-body #invoice_id').val(invoice_id);
+        })
+
+    </script>
 @endsection

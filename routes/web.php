@@ -6,6 +6,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\ProductController;
 use \App\Http\Controllers\InvoiceDetailController;
+use \App\Http\Controllers\ArchiveController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,6 +42,14 @@ Route::get('/download/{invoice_number}/{file_name}',[InvoiceDetailController::cl
 Route::post('/delete_file',[InvoiceDetailController::class,'destroy'])->name('delete_file');
 Route::resource('InvoiceAttachments',InvoiceDetailController::class);
 Route::get('/edit_invoice/{id}',[InvoiceController::class,'edit']);
+Route::get('/Status_show/{id}',[InvoiceController::class,'show'])->name('Status_show');
+Route::post('/Status_Update/{id}',[InvoiceController::class,'Status_Update'])->name('Status_Update');
+Route::get('Invoices_Paid',[InvoiceController::class,'Invoice_Paid']);
+Route::get('Invoices_UnPaid',[InvoiceController::class,'Invoice_UnPaid']);
+Route::get('Invoices_Partial',[InvoiceController::class,'Invoice_Partial']);
+Route::resource('Archive_Invoices',ArchiveController::class);
+Route::get('Print_invoice/{id}',[InvoiceController::class,'Print_invoice']);
+
 
 
 

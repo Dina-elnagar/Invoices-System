@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\File; // Import the File facade
+use Illuminate\Support\Facades\Response; // Import the Response facade
 class InvoiceController extends Controller
 {
     /**
@@ -109,9 +110,10 @@ class InvoiceController extends Controller
      * @param  \App\Models\invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function show(invoice $invoice)
+    public function show($id)
     {
-        //
+        $invoices=invoice::where('id',$id)->first();
+        return view('invoices.status_update',compact('invoices'));
     }
 
     /**
@@ -166,17 +168,32 @@ class InvoiceController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id= $request->invoice_id;
-        $invoice= invoice::where('id',$id)->first();
-        $attachment=Invoice_attachment::where('invoice_id',$id)->first();
 
-        if (!empty($attachment->invoice_number)){
-            $invoices_path=public_path()."/Attachment/".$attachment->invoice_number."/".$attachment->file_name;
-            unlink($invoices_path); //delete attachment from storage
+        $id = $request->invoice_id;
+        $invoice = invoice::where('id', $id)->first();
+        $attachment = Invoice_attachment::where('invoice_id', $id)->first();
+        $id_page = $request->id_page;
+        if (!$id_page == 2) {
+            if (!empty($attachment->invoice_number)) {
+                $invoices_path = public_path("Attachment/{$attachment->invoice_number}");
+
+                // Check if the directory exists before attempting to delete
+                if (File::isDirectory($invoices_path)) {
+                    // Delete the entire directory and its contents
+                    File::deleteDirectory($invoices_path);
+                }
+            }
+            $invoice->ForceDelete();
+            session()->flash('delete_invoice');
+            return redirect('/invoices');
         }
-        $invoice->forceDelete();
-        session()->flash('delete_invoice');
-        return redirect('/invoices');
+        else {
+            $invoice->delete();
+            session()->flash('archive_invoice');
+            return redirect('/Archive_Invoices');
+        }
+
+
     }
 
 
@@ -184,6 +201,76 @@ class InvoiceController extends Controller
     {
         $products = DB::table('products')->where('section_id',$id)->pluck('product_name','id');
         return json_encode($products);
+    }
+
+    public function Status_Update($id,Request $request)
+    {
+        $invoices=invoice::findOrFail($id);
+        if ($request->status === 'Paid')
+        {
+            $invoices->update([
+                'status'=>$request->status,
+                'value_status'=>1,
+                'payment_date'=>$request->payment_date,
+            ]);
+            Invoice_detail::create([
+                'invoice_id'=>$id,
+                'invoice_number'=>$request->invoice_number,
+                'product'=>$request->product,
+                'section'=>$request->section,
+                'status'=>$request->status,
+                'value_status'=>1,
+                'payment_date'=>$request->payment_date,
+                'note'=>$request->note,
+                'user'=>(Auth::user()->name),
+            ]);
+
+        }
+        else
+        {
+            $invoices->update([
+                'status'=>$request->status,
+                'value_status'=>3,
+                'payment_date'=>$request->payment_date,
+            ]);
+            Invoice_detail::create([
+                'invoice_id'=>$id,
+                'invoice_number'=>$request->invoice_number,
+                'product'=>$request->product,
+                'section'=>$request->section,
+                'status'=>$request->status,
+                'value_status'=>3,
+                'payment_date'=>$request->payment_date,
+                'note'=>$request->note,
+                'user'=>(Auth::user()->name),
+            ]);
+        }
+        session()->flash('Status_Update');
+        return redirect('/invoices');
+    }
+
+    public function Invoice_Paid()
+    {
+        $invoices=invoice::where('value_status',1)->get();
+        return view('invoices.invoices_paid',compact('invoices',));
+    }
+
+    public function Invoice_UnPaid()
+    {
+        $invoices=invoice::where('value_status',2)->get();
+        return view('invoices.invoices_unpaid',compact('invoices',));
+    }
+
+    public function Invoice_Partial()
+    {
+        $invoices=invoice::where('value_status',3)->get();
+        return view('invoices.invoices_partial',compact('invoices',));
+    }
+
+    public function Print_invoice($id)
+    {
+        $invoices=invoice::where('id',$id)->first();
+        return view('invoices.Print_Invoice',compact('invoices'));
     }
 
 }
