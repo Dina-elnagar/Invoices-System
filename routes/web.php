@@ -7,6 +7,8 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\ProductController;
 use \App\Http\Controllers\InvoiceDetailController;
 use \App\Http\Controllers\ArchiveController;
+use \App\Http\Controllers\RoleController;
+use \App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,7 +52,10 @@ Route::get('Invoices_Partial',[InvoiceController::class,'Invoice_Partial']);
 Route::resource('Archive_Invoices',ArchiveController::class);
 Route::get('Print_invoice/{id}',[InvoiceController::class,'Print_invoice']);
 
-
+Route::group(['middleware'=>['auth']],function (){
+   Route::resource('roles',RoleController::class);
+    Route::resource('users',UserController::class);
+});
 
 
 Route::get('/{page}', [AdminController::class, 'index']);
