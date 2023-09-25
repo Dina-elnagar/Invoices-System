@@ -9,6 +9,7 @@ use \App\Http\Controllers\InvoiceDetailController;
 use \App\Http\Controllers\ArchiveController;
 use \App\Http\Controllers\RoleController;
 use \App\Http\Controllers\UserController;
+use \App\HTTP\Controllers\Invoices_ReportController;
 use \App\Http\Middleware\CheckUserStatus;
 /*
 |--------------------------------------------------------------------------
@@ -56,8 +57,8 @@ Route::group(['middleware'=>['auth']],function (){
    Route::resource('roles',RoleController::class);
     Route::resource('users',UserController::class);
 });
-
-
+Route::get('invoices_report',[Invoices_ReportController::class,'index']);
+Route::post('Search_invoices',[Invoices_ReportController::class,'Search_invoices'])->name('Search_invoices');
 
 
 
