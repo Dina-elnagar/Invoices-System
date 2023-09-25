@@ -8,7 +8,7 @@
 
 
     @section('title')
-        عرض الصلاحيات - مورا سوفت للادارة القانونية
+      View Permissions
     @stop
 
 
@@ -18,8 +18,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الصلاحيات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض
-                الصلاحيات</span>
+                <h4 class="content-title mb-0 my-auto">Permissions</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ View Permissions</span>
+
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
                 <div class="card-body">
                     <div class="main-content-label mg-b-5">
                         <div class="pull-right">
-                            <a class="btn btn-primary btn-sm" href="{{ route('roles.index') }}">رجوع</a>
+                            <a class="btn btn-primary btn-sm" href="{{ route('roles.index') }}">Back</a>
                         </div>
                     </div>
                     <div class="row">

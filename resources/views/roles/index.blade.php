@@ -67,7 +67,7 @@
                     <div class="d-flex justify-content-between">
                         <div class="col-lg-12 margin-tb">
                             <div class="pull-right">
-                                @can('اضافة صلاحية')
+                                @can('Add_permission')
                                     <a class="btn btn-primary btn-sm" href="{{ route('roles.create') }}">Add Role</a>
                                 @endcan
                             </div>
@@ -92,22 +92,23 @@
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        @can('عرض صلاحية')
+                                        @can('View_permission')
                                             <a class="btn btn-success btn-sm"
-                                               href="{{ route('roles.show', $role->id) }}">عرض</a>
+                                               href="{{ route('roles.show', $role->id) }}">View</a>
                                         @endcan
 
-                                        @can('تعديل صلاحية')
+                                        @can('Edit_permission')
                                             <a class="btn btn-primary btn-sm"
-                                               href="{{ route('roles.edit', $role->id) }}">تعديل</a>
-                                        @endcan
+                                               href="{{ route('roles.edit', $role->id) }}">Edit</a>@endcan
 
-                                        @if ($role->name !== 'owner')
-                                            @can('حذف صلاحية')
-                                                {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy',
-                                                $role->id], 'style' => 'display:inline']) !!}
-                                                {!! Form::submit('حذف', ['class' => 'btn btn-danger btn-sm']) !!}
-                                                {!! Form::close() !!}
+                                        @if ($role->name !== 'Admin')
+                                            @can('Delete_permission')
+                                                    <form method="POST" action="{{ route('roles.destroy', $role->id) }}" style="display:inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                    </form>
+
                                             @endcan
                                         @endif
 

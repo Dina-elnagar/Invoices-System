@@ -9,6 +9,7 @@ use \App\Http\Controllers\InvoiceDetailController;
 use \App\Http\Controllers\ArchiveController;
 use \App\Http\Controllers\RoleController;
 use \App\Http\Controllers\UserController;
+use \App\Http\Middleware\CheckUserStatus;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,11 +24,11 @@ use \App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('auth.login');
 });
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified'
+    'verified',
+   // 'CheckUserStatus'
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -51,11 +52,14 @@ Route::get('Invoices_UnPaid',[InvoiceController::class,'Invoice_UnPaid']);
 Route::get('Invoices_Partial',[InvoiceController::class,'Invoice_Partial']);
 Route::resource('Archive_Invoices',ArchiveController::class);
 Route::get('Print_invoice/{id}',[InvoiceController::class,'Print_invoice']);
-
 Route::group(['middleware'=>['auth']],function (){
    Route::resource('roles',RoleController::class);
     Route::resource('users',UserController::class);
 });
+
+
+
+
 
 
 Route::get('/{page}', [AdminController::class, 'index']);

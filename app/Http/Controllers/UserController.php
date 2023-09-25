@@ -31,8 +31,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        $roles = Role::pluck('name', 'id');
+        return view('users.Add_user',compact('roles'));
     }
 
     /**
@@ -47,14 +47,14 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
-            'roles' => 'required'
+            'roles_name' => 'required'
         ]);
 
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
         $user = User::create($input);
-        $user->assignRole($request->input('roles'));
+        $user->assignRole($request->input('roles_name'));
 
         return redirect()->route('users.index')
             ->with('success','User created successfully');
@@ -81,11 +81,12 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRole = $user->roles->pluck('name','name')->all();
+        $roles = Role::all(); // Fetch all roles as objects
+        $userRole = $user->roles->pluck('id')->all(); // Extract role IDs
 
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit', compact('user', 'roles', 'userRole'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -126,10 +127,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        User::find($id)->delete();
-        return redirect()->route('users.index')
-            ->with('success','User deleted successfully');
+        $user = User::find($request->input('user_id'));
+
+        if ($user) {
+            $user->delete();
+            return redirect()->route('users.index')->with('success', 'User deleted successfully');
+        } else {
+            return redirect()->route('users.index')->with('error', 'User not found');
+        }
+
     }
 }

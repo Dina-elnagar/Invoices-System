@@ -53,13 +53,14 @@
 				<!-- row -->
 				<div class="row">
                     <div class="col-sm-6 col-md-4 col-xl-3" >
-
+                        @can('Add_Invoice')
                         <a href="invoices/create" class="modal-effect btn btn-outline-primary btn-block" ><i
                                 class="fas fa-plus"></i>&nbsp; Add Invoice</a>
-
+                        @endcan
+                        @can('Export_Excel_Invoice')
                         <a class="modal-effect btn btn-outline-primary btn-block" href="{{ url('export_invoices') }}"
                            ><i class="fas fa-file-download"></i>&nbsp; Excel</a>
-
+                        @endcan
                     </div>
                     <div class="card-body">
 
@@ -115,23 +116,29 @@
                                                     <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-info"
                                                             data-toggle="dropdown" id="droprightMenuButton" type="button">Action<i class="fas fa-caret-right ml-1"></i></button>
                                                     <div aria-labelledby="droprightMenuButton" class="dropdown-menu tx-13">
+                                                      @can('Edit_Invoice')
                                                         <a class="dropdown-item" href="{{url('edit_invoice')}}/{{$invoice->id}}">
                                                             <i class="fas fa-edit"></i>  Edit</a>
-
+                                                        @endcan
+                                                        @can('Delete_Invoice')
                                                         <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
                                                            data-toggle="modal" data-target="#delete_invoice">
                                                             <i class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;Delete</a>
-
-                                                        <a class="dropdown-item" href="{{url('Status_show')}}/{{$invoice->id}}">
+                                                        @endcan
+                                                        @can('Edit_Status_Invoice')
+                                                            <a class="dropdown-item" href="{{url('Status_show')}}/{{$invoice->id}}">
                                                             <i class="fas fa-money-bill"></i>  Status Show</a>
-
+                                                        @endcan
+                                                          @can('Archive_Invoices')
                                                         <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
                                                            data-toggle="modal" data-target="#Transfer_invoice"><i
                                                                 class="text-warning fas fa-exchange-alt"></i>&nbsp;&nbsp; Archive</a>
-
+                                                            @endcan
+                                                          @can('Print_Invoice')
                                                         <a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
                                                                 class="text-success fas fa-print"></i>&nbsp;&nbsp;  Print
                                                         </a>
+                                                                @endcan
 
                                                     </div>
                                                 </div>

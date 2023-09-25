@@ -42,7 +42,7 @@
             <div class="card">
                 <div class="card-header pb-0">
                     <div class="col-sm-1 col-md-2">
-                        @can('Add User')
+                        @can('Add_User')
                             <a class="btn btn-primary btn-sm" href="{{ route('users.create') }}">Add User</a>
                         @endcan
                     </div>
@@ -67,13 +67,13 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
-                                        @if ($user->Status == 'مفعل')
+                                        @if ($user->status == 'Enabled')
                                             <span class="label text-success d-flex">
-                                                <div class="dot-label bg-success ml-1"></div>{{ $user->Status }}
+                                                <div class="dot-label bg-success ml-1"></div>{{ $user->status }}
                                             </span>
                                         @else
                                             <span class="label text-danger d-flex">
-                                                <div class="dot-label bg-danger ml-1"></div>{{ $user->Status }}
+                                                <div class="dot-label bg-danger ml-1"></div>{{ $user->status }}
                                             </span>
                                         @endif
                                     </td>
@@ -87,15 +87,15 @@
                                     </td>
 
                                     <td>
-                                        @can('تعديل مستخدم')
+                                        @can('Edit_User')
                                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-info"
-                                               title="تعديل"><i class="las la-pen"></i></a>
+                                               title="Edit"><i class="las la-pen"></i></a>
                                         @endcan
 
-                                        @can('حذف مستخدم')
+                                        @can('Delete_User')
                                             <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
                                                data-user_id="{{ $user->id }}" data-username="{{ $user->name }}"
-                                               data-toggle="modal" href="#modaldemo8" title="حذف"><i
+                                               data-toggle="modal" href="#modaldemo8" title="Delete"><i
                                                     class="las la-trash"></i></a>
                                         @endcan
                                     </td>
@@ -114,20 +114,20 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">حذف المستخدم</h6><button aria-label="Close" class="close"
+                        <h6 class="modal-title">Delete User</h6><button aria-label="Close" class="close"
                                                                          data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <form action="{{ route('users.destroy', 'test') }}" method="post">
                         {{ method_field('delete') }}
                         {{ csrf_field() }}
                         <div class="modal-body">
-                            <p>هل انت متاكد من عملية الحذف ؟</p><br>
-                            <input type="hidden" name="user_id" id="user_id" value="">
+                            <p>Are you sure you want to delete this</p><br>
+                            <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}">
                             <input class="form-control" name="username" id="username" type="text" readonly>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
-                            <button type="submit" class="btn btn-danger">تاكيد</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
                         </div>
                 </div>
                 </form>

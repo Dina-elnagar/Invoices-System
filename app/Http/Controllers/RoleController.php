@@ -16,13 +16,13 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-//    function __construct()
-//    {
-//        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-//        $this->middleware('permission:role-create', ['only' => ['create','store']]);
-//        $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-//        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-//    }
+    function __construct()
+    {
+        $this->middleware('permission:View_permission', ['only' => ['index']]);
+        $this->middleware('permission:Add_permission', ['only' => ['create','store']]);
+        $this->middleware('permission:Edit_permission', ['only' => ['edit','update']]);
+        $this->middleware('permission:Delete_permission', ['only' => ['destroy']]);
+    }
 
     /**
      * Display a listing of the resource.
@@ -119,7 +119,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->input('permission'));
 
-        return redirect()->route('roles.index')
+        return redirect()->route('roles.index',compact('role'))
             ->with('success','Role updated successfully');
     }
     /**

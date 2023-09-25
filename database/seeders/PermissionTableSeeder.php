@@ -15,13 +15,54 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
         $permissions = [
-            'role-list',
-            'role-create',
-            'role-edit',
-            'role-delete',
+            'Invoices',
+            'List_Invoices',
+            'Paid_Invoices',
+            'UnPaid_Invoices',
+            'Partial_Invoices',
+            'Archive_Invoices',
+            'Reports',
+            'Invoices_Report',
+            'Customers_Report',
+            'Users',
+            'List_Users',
+            'Users_permissions',
+            'Settings',
+            'Products',
+            'Sections',
+
+            'Print_Invoice',
+            'Add_Invoice',
+            'Edit_Invoice',
+            'Delete_Invoice',
+            'Export_Excel_Invoice',
+            'Edit_Status_Invoice',
+            'Add_Attachment',
+            'Delete_Attachment',
+
+            'Add_User',
+            'Edit_User',
+            'Delete_User',
+
+            'View_permission',
+            'Add_permission',
+            'Edit_permission',
+            'Delete_permission',
+
+            'Add_Product',
+            'Edit_Product',
+            'Delete_Product',
+
+            'Add_Section',
+            'Edit_Section',
+            'Delete_Section',
+
+
         ];
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
+
+
     }
 }
