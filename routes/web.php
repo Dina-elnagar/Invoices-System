@@ -12,6 +12,7 @@ use \App\Http\Controllers\UserController;
 use \App\HTTP\Controllers\Invoices_ReportController;
 use \App\Http\Middleware\CheckUserStatus;
 use \App\Http\Controllers\Customers_ReportController;
+use \App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,15 +27,14 @@ use \App\Http\Controllers\Customers_ReportController;
 Route::get('/', function () {
     return view('auth.login');
 });
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
    // 'CheckUserStatus'
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard',HomeController::class)->name('dashboard');
 });
 
 Route::resource('invoices', InvoiceController::class);
@@ -56,7 +56,7 @@ Route::resource('Archive_Invoices',ArchiveController::class);
 Route::get('Print_invoice/{id}',[InvoiceController::class,'Print_invoice']);
 Route::group(['middleware'=>['auth']],function (){
    Route::resource('roles',RoleController::class);
-    Route::resource('users',UserController::class);
+   Route::resource('users',UserController::class);
 });
 Route::get('invoices_report',[Invoices_ReportController::class,'index']);
 Route::post('Search_invoices',[Invoices_ReportController::class,'Search_invoices'])->name('Search_invoices');
