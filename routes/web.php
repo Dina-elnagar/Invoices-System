@@ -11,6 +11,7 @@ use \App\Http\Controllers\RoleController;
 use \App\Http\Controllers\UserController;
 use \App\HTTP\Controllers\Invoices_ReportController;
 use \App\Http\Middleware\CheckUserStatus;
+use \App\Http\Controllers\Customers_ReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,6 +61,8 @@ Route::group(['middleware'=>['auth']],function (){
 Route::get('invoices_report',[Invoices_ReportController::class,'index']);
 Route::post('Search_invoices',[Invoices_ReportController::class,'Search_invoices'])->name('Search_invoices');
 
+Route::get('customers_report',[Customers_ReportController::class,'index']);
+Route::post('Search_customers',[Customers_ReportController::class,'Search_customers'])->name('Search_customers');
 
 
 
