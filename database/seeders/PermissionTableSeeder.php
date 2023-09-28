@@ -57,6 +57,7 @@ class PermissionTableSeeder extends Seeder
             'Edit_Section',
             'Delete_Section',
 
+            //'Notifications',
 
         ];
         foreach ($permissions as $permission) {

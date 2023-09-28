@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File; // Import the File facade
 use Illuminate\Support\Facades\Response; // Import the Response facade
 use Illuminate\Support\Facades\Notification;
+use \App\Notifications\AddInvoiceDB;
 
 class InvoiceController extends Controller
 {
@@ -98,16 +99,14 @@ class InvoiceController extends Controller
                 $imageName= $request->pic->getClientOriginalName();
                 $request->pic->move(public_path('Attachment/'.$invoice_number),$imageName);
             }
-
 //            $user = User::first();
 //            $user->notify(new AddInvoice($invoice_id));
 
             DB::commit();
         });
-
-//        $user = User::get();
-//        $invoices = invoice::latest()->first();
-//        Notification::send($user, new AddInvoice($invoices));
+        $user = User::get();
+        $invoice = invoice::latest()->first();
+        Notification::send($user, new AddInvoiceDB($invoice));
 
         session()->flash('Add', 'Invoice Added successfully');
         return redirect('/invoices');
@@ -282,5 +281,14 @@ class InvoiceController extends Controller
         $invoices=invoice::where('id',$id)->first();
         return view('invoices.Print_Invoice',compact('invoices'));
     }
+
+    public function MarkAsRead_all(){
+        $userUnreadNotification = auth()->user()->unreadNotifications;
+        if ($userUnreadNotification){
+            $userUnreadNotification->markAsRead();
+            return back();
+        }
+    }
+
 
 }
